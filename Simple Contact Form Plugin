@@ -1,0 +1,40 @@
+README.md
+https://github.com/your-username/simple-contact-form.git
+<?php
+/*
+Plugin Name: Simple Contact Fform by Webmarshal
+Description: A basic contact form plugin with email notification.
+Version: 1.0
+Author: Agboluaje Uthman Ayodele
+*/
+
+function scf_contact_form_shortcode() {
+    ob_start();
+
+    if (isset($_POST['scf_submit'])) {
+        $name    = sanitize_text_field($_POST['scf_name']);
+        $email   = sanitize_email($_POST['scf_email']);
+        $message = sanitize_textarea_field($_POST['scf_message']);
+
+        $to = get_option('admin_email');
+        $subject = 'New Contact Form Message';
+        $headers = ['Content-Type: text/html; charset=UTF-8', "Reply-To: $name <$email>"];
+        $body = "<h2>Message from $name</h2><p>Email: $email</p><p>$message</p>";
+
+        wp_mail($to, $subject, $body, $headers);
+
+        echo '<p style="color:green;">Message sent successfully!</p>';
+    }
+
+    ?>
+    <form method="post">
+        <p><input type="text" name="scf_name" placeholder="Your Name" required></p>
+        <p><input type="email" name="scf_email" placeholder="Your Email" required></p>
+        <p><textarea name="scf_message" placeholder="Your Message" required></textarea></p>
+        <p><input type="submit" name="scf_submit" value="Send"></p>
+    </form>
+    <?php
+
+    return ob_get_clean();
+}
+add_shortcode('simple_contact_form', 'scf_contact_form_shortcode');
