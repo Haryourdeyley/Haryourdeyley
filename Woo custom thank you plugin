@@ -1,0 +1,23 @@
+<?php
+/*
+Plugin Name: Woo Custom Thank You by Webmarshal
+Description: Adds a custom message to the WooCommerce thank you/order received page.
+Version: 1.0
+Author: Agboluaje Uthman Ayodele, Webmarshal Technologies
+*/
+
+if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
+
+    add_action('woocommerce_thankyou', 'wcty_custom_thank_you_message', 5);
+
+    function wcty_custom_thank_you_message($order_id) {
+        $order = wc_get_order($order_id);
+        if ($order) {
+            echo '<div style="padding:20px; background:#f0f0f0; margin:20px 0; border-left:5px solid #0073aa;">';
+            echo '<h2>Thank You for Your Purchase!</h2>';
+            echo '<p>We truly appreciate your business. If you have any questions, feel free to <a href="/contact">contact us</a>.</p>';
+            echo '<p><strong>Visit again for more amazing deals!</strong></p>';
+            echo '</div>';
+        }
+    }
+}
